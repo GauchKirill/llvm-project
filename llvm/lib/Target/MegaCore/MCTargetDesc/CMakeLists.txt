@@ -1,5 +1,6 @@
 add_llvm_component_library(LLVMMegaCoreDesc
   MegaCoreMCTargetDesc.cpp
+  MegaCoreMCAsmInfo.cpp
 
   LINK_COMPONENTS
   MC

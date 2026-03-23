@@ -1,10 +1,13 @@
 #include "MCTargetDesc/MegaCoreInfo.h"
 #include "MegaCore.h"
+#include "MegaCoreMCAsmInfo.h"
 #include "TargetInfo/MegaCoreTargetInfo.h"
 #include "llvm/MC/MCInstrInfo.h"
+#include "llvm/MC/MCDwarf.h"
 #include "llvm/MC/MCRegisterInfo.h"
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/MC/TargetRegistry.h"
+#include "llvm/Support/ErrorHandling.h"
 
 using namespace llvm;
 
@@ -38,9 +41,21 @@ static MCSubtargetInfo *createMegaCoreMCSubtargetInfo(const Triple &TT,
   return createMegaCoreMCSubtargetInfoImpl(TT, CPU, /*TuneCPU*/ CPU, FS);
 }
 
+static MCAsmInfo *createMegaCoreMCAsmInfo(const MCRegisterInfo &MRI,
+                                     const Triple &TT,
+                                     const MCTargetOptions &Options) {
+  MEGACORE_DUMP_MAGENTA
+  MCAsmInfo *MAI = new MegaCoreELFMCAsmInfo(TT);
+  unsigned SP = MRI.getDwarfRegNum(MegaCore::R1, true);
+  MCCFIInstruction Inst = MCCFIInstruction::cfiDefCfa(nullptr, SP, 0);
+  MAI->addInitialFrameState(Inst);
+  return MAI;
+}
+
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeMegaCoreTargetMC() {
   MEGACORE_DUMP_MAGENTA
   Target &TheMegaCoreTarget = getTheMegaCoreTarget();
+  RegisterMCAsmInfoFn X(TheMegaCoreTarget, createMegaCoreMCAsmInfo);
   // Register the MC register info.
   TargetRegistry::RegisterMCRegInfo(TheMegaCoreTarget, createMegaCoreMCRegisterInfo);
   // Register the MC instruction info.
