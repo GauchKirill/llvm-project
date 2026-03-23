@@ -1,6 +1,7 @@
 #include "MegaCoreTargetMachine.h"
 #include "MegaCore.h"
 #include "TargetInfo/MegaCoreTargetInfo.h"
+#include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/MC/TargetRegistry.h"
 
 using namespace llvm;
@@ -21,4 +22,26 @@ MegaCoreTargetMachine::MegaCoreTargetMachine(
   MEGACORE_DUMP_CYAN;
 
   initAsmInfo();
+}
+
+
+namespace {
+
+/// MegaCore Code Generator Pass Configuration Options.
+class MegaCorePassConfig : public TargetPassConfig {
+public:
+  MegaCorePassConfig(MegaCoreTargetMachine &TM, PassManagerBase &PM)
+      : TargetPassConfig(TM, PM) {}
+
+  bool addInstSelector() override {
+    MEGACORE_DUMP_CYAN
+    return false;
+  }
+};
+
+} // end anonymous namespace
+
+TargetPassConfig *MegaCoreTargetMachine::createPassConfig(PassManagerBase &PM) {
+  MEGACORE_DUMP_CYAN
+  return new MegaCorePassConfig(*this, PM);
 }
