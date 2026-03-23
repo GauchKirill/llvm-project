@@ -19,4 +19,6 @@ MegaCoreTargetMachine::MegaCoreTargetMachine(
                                Reloc::Static,
                                getEffectiveCodeModel(CM, CodeModel::Small), OL) {
   MEGACORE_DUMP_CYAN;
+
+  initAsmInfo();
 }
