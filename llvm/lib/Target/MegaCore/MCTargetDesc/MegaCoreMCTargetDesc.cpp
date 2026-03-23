@@ -1,5 +1,6 @@
 #include "MCTargetDesc/MegaCoreInfo.h"
 #include "MegaCore.h"
+#include "MegaCoreInstPrinter.h"
 #include "MegaCoreMCAsmInfo.h"
 #include "TargetInfo/MegaCoreTargetInfo.h"
 #include "llvm/MC/MCInstrInfo.h"
@@ -52,6 +53,15 @@ static MCAsmInfo *createMegaCoreMCAsmInfo(const MCRegisterInfo &MRI,
   return MAI;
 }
 
+static MCInstPrinter *createMegaCoreMCInstPrinter(const Triple &T,
+                                             unsigned SyntaxVariant,
+                                             const MCAsmInfo &MAI,
+                                             const MCInstrInfo &MII,
+                                             const MCRegisterInfo &MRI) {
+  MEGACORE_DUMP_MAGENTA
+  return new MegaCoreInstPrinter(MAI, MII, MRI);
+}
+
 extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeMegaCoreTargetMC() {
   MEGACORE_DUMP_MAGENTA
   Target &TheMegaCoreTarget = getTheMegaCoreTarget();
@@ -63,4 +73,7 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeMegaCoreTargetMC() {
   // Register the MC subtarget info.
   TargetRegistry::RegisterMCSubtargetInfo(TheMegaCoreTarget,
                                           createMegaCoreMCSubtargetInfo);
+
+  // Register the MCInstPrinter
+  TargetRegistry::RegisterMCInstPrinter(TheMegaCoreTarget, createMegaCoreMCInstPrinter);
 }
