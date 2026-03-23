@@ -1,4 +1,8 @@
 include "llvm/Target/Target.td"
 include "MegaCoreRegisterInfo.td"
+include "MegaCoreInstrInfo.td"
 
-def MegaCore : Target;
+def MegaCoreInstrInfo : InstrInfo;
+def MegaCore : Target {
+  let InstructionSet = MegaCoreInstrInfo;
+}

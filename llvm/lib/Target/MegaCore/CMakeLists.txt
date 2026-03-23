@@ -3,12 +3,14 @@ add_llvm_component_group(MegaCore)
 set(LLVM_TARGET_DEFINITIONS MegaCore.td)
 
 tablegen(LLVM MegaCoreGenRegisterInfo.inc -gen-register-info)
+tablegen(LLVM MegaCoreGenInstrInfo.inc -gen-instr-info)
 
 add_public_tablegen_target(MegaCoreCommonTableGen)
 
 add_llvm_target(MegaCoreCodeGen
   MegaCoreTargetMachine.cpp
   MegaCoreRegisterInfo.cpp
+  MegaCoreInstrInfo.cpp
 
   LINK_COMPONENTS
   CodeGen

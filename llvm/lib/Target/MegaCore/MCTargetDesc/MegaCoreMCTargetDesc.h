@@ -7,4 +7,8 @@
 #define GET_REGINFO_ENUM
 #include "MegaCoreGenRegisterInfo.inc"
 
+// Defines symbolic names for the MegaCore instructions.
+#define GET_INSTRINFO_ENUM
+#include "MegaCoreGenInstrInfo.inc"
+
 #endif // LLVM_LIB_TARGET_MEGACORE_MCTARGETDESC_MEGACOREMCTARGETDESC_H
