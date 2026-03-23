@@ -33,8 +33,13 @@ public:
   MegaCorePassConfig(MegaCoreTargetMachine &TM, PassManagerBase &PM)
       : TargetPassConfig(TM, PM) {}
 
+  MegaCoreTargetMachine &getMegaCoreTargetMachine() const {
+    return getTM<MegaCoreTargetMachine>();
+  }
+
   bool addInstSelector() override {
     MEGACORE_DUMP_CYAN
+    addPass(createMegaCoreISelDag(getMegaCoreTargetMachine(), getOptLevel()));
     return false;
   }
 };

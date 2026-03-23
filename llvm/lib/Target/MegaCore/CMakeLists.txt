@@ -6,6 +6,7 @@ tablegen(LLVM MegaCoreGenRegisterInfo.inc -gen-register-info)
 tablegen(LLVM MegaCoreGenInstrInfo.inc -gen-instr-info)
 tablegen(LLVM MegaCoreGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM MegaCoreGenMCPseudoLowering.inc -gen-pseudo-lowering)
+tablegen(LLVM MegaCoreGenDAGISel.inc -gen-dag-isel)
 
 add_public_tablegen_target(MegaCoreCommonTableGen)
 
@@ -15,6 +16,7 @@ add_llvm_target(MegaCoreCodeGen
   MegaCoreInstrInfo.cpp
   MegaCoreSubtarget.cpp
   MegaCoreAsmPrinter.cpp
+  MegaCoreISelDagToDag.cpp
 
   LINK_COMPONENTS
   CodeGen
@@ -23,6 +25,7 @@ add_llvm_target(MegaCoreCodeGen
   Target
   MegaCoreInfo
   AsmPrinter
+  SelectionDAG
 
   ADD_TO_COMPONENT
   MegaCore
