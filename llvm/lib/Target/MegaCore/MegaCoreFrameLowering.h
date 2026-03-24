@@ -5,11 +5,13 @@
 #include "llvm/CodeGen/TargetFrameLowering.h"
 
 namespace llvm {
+class MegaCoreSubtarget;
 
 class MegaCoreFrameLowering : public TargetFrameLowering {
 public:
-  explicit MegaCoreFrameLowering()
-      : TargetFrameLowering(TargetFrameLowering::StackGrowsDown, Align(4), 0) {
+  MegaCoreFrameLowering(const MegaCoreSubtarget &STI)
+      : TargetFrameLowering(TargetFrameLowering::StackGrowsDown, Align(4), 0),
+        STI(STI) {
     MEGACORE_DUMP_GREEN
   }
 
@@ -24,6 +26,9 @@ public:
   /// frame pointer register. For most targets this is true only if the function
   /// has variable sized allocas or if frame pointer elimination is disabled.
   bool hasFPImpl(const MachineFunction &MF) const override { return false; }
+
+private:
+  const MegaCoreSubtarget &STI;
 };
 
 } // namespace llvm
