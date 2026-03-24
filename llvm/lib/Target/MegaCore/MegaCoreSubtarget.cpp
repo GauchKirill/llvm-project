@@ -13,6 +13,6 @@ using namespace llvm;
 MegaCoreSubtarget::MegaCoreSubtarget(const Triple &TT, const std::string &CPU,
                            const std::string &FS, const TargetMachine &TM)
     : MegaCoreGenSubtargetInfo(TT, CPU, /*TuneCPU=*/CPU, FS), TLInfo(TM, *this),
-      FrameLowering(*this) {
+      FrameLowering(*this), InstrInfo() {
   MEGACORE_DUMP_CYAN
 }

@@ -4,7 +4,9 @@
 #include "MegaCore.h"
 #include "MegaCoreFrameLowering.h"
 #include "MegaCoreISelLowering.h"
+#include "MegaCoreInstrInfo.h"
 #include "MegaCoreRegisterInfo.h"
+#include "llvm/CodeGen/SelectionDAGTargetInfo.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
 
 #define GET_SUBTARGETINFO_HEADER
@@ -16,6 +18,8 @@ class MegaCoreSubtarget : public MegaCoreGenSubtargetInfo {
   MegaCoreTargetLowering TLInfo;
   MegaCoreFrameLowering FrameLowering;
   MegaCoreRegisterInfo RegInfo;
+  MegaCoreInstrInfo InstrInfo;
+  SelectionDAGTargetInfo TSInfo;
 
 public:
   MegaCoreSubtarget(const Triple &TT, const std::string &CPU, const std::string &FS,
@@ -36,6 +40,11 @@ public:
   const MegaCoreRegisterInfo *getRegisterInfo() const override {
     MEGACORE_DUMP_CYAN
     return &RegInfo;
+  }
+  const MegaCoreInstrInfo *getInstrInfo() const override { return &InstrInfo; }
+  const SelectionDAGTargetInfo *getSelectionDAGInfo() const override {
+    MEGACORE_DUMP_CYAN
+    return &TSInfo;
   }
 };
 
