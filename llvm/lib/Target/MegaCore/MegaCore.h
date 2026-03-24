@@ -23,7 +23,19 @@
 namespace llvm {
 class MegaCoreTargetMachine;
 class FunctionPass;
+class MegaCoreSubtarget;
+class AsmPrinter;
+class InstructionSelector;
+class MCInst;
+class MCOperand;
+class MachineInstr;
+class MachineOperand;
+class PassRegistry;
 
+bool lowerMegaCoreMachineInstrToMCInst(const MachineInstr *MI, MCInst &OutMI,
+                                  AsmPrinter &AP);
+bool LowerMegaCoreMachineOperandToMCOperand(const MachineOperand &MO,
+                                       MCOperand &MCOp, const AsmPrinter &AP);
 FunctionPass *createMegaCoreISelDag(MegaCoreTargetMachine &TM, CodeGenOptLevel OptLevel);
 
 } // namespace llvm
