@@ -1,6 +1,7 @@
 #include "MegaCoreTargetMachine.h"
 #include "MegaCore.h"
 #include "TargetInfo/MegaCoreTargetInfo.h"
+#include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/MC/TargetRegistry.h"
 
@@ -15,10 +16,10 @@ MegaCoreTargetMachine::MegaCoreTargetMachine(
     const Target &T, const Triple &TT, StringRef CPU, StringRef FS,
     const TargetOptions &Options, std::optional<Reloc::Model> RM,
     std::optional<CodeModel::Model> CM, CodeGenOptLevel OL, bool JIT)
-    : CodeGenTargetMachineImpl(T, "e-m:e-p:32:32-i8:8:32-i16:16:32-i64:64-n32",
-                               TT, CPU, FS, Options,
-                               Reloc::Static,
-                               getEffectiveCodeModel(CM, CodeModel::Small), OL) {
+      : CodeGenTargetMachineImpl(T, "e-m:e-p:32:32-i8:8:32-i16:16:32-i64:64-n32",
+                               TT, CPU, FS, Options, Reloc::Static,
+                               getEffectiveCodeModel(CM, CodeModel::Small), OL),
+      TLOF(std::make_unique<TargetLoweringObjectFileELF>()) {
   MEGACORE_DUMP_CYAN;
 
   initAsmInfo();
@@ -49,4 +50,9 @@ public:
 TargetPassConfig *MegaCoreTargetMachine::createPassConfig(PassManagerBase &PM) {
   MEGACORE_DUMP_CYAN
   return new MegaCorePassConfig(*this, PM);
+}
+
+TargetLoweringObjectFile *MegaCoreTargetMachine::getObjFileLowering() const {
+  MEGACORE_DUMP_CYAN
+  return TLOF.get();
 }
