@@ -4,6 +4,7 @@
 #include "MegaCore.h"
 #include "MegaCoreFrameLowering.h"
 #include "MegaCoreISelLowering.h"
+#include "MegaCoreRegisterInfo.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
 
 #define GET_SUBTARGETINFO_HEADER
@@ -14,6 +15,8 @@ namespace llvm {
 class MegaCoreSubtarget : public MegaCoreGenSubtargetInfo {
   MegaCoreTargetLowering TLInfo;
   MegaCoreFrameLowering FrameLowering;
+  MegaCoreRegisterInfo RegInfo;
+
 public:
   MegaCoreSubtarget(const Triple &TT, const std::string &CPU, const std::string &FS,
                     const TargetMachine &TM);
@@ -29,6 +32,10 @@ public:
   const MegaCoreFrameLowering *getFrameLowering() const override {
     MEGACORE_DUMP_CYAN
     return &FrameLowering;
+  }
+  const MegaCoreRegisterInfo *getRegisterInfo() const override {
+    MEGACORE_DUMP_CYAN
+    return &RegInfo;
   }
 };
 
