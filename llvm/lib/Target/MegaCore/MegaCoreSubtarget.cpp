@@ -10,8 +10,8 @@ using namespace llvm;
 #define GET_SUBTARGETINFO_CTOR
 #include "MegaCoreGenSubtargetInfo.inc"
 
-MegaCoreSubtarget::MegaCoreSubtarget(const StringRef &CPU, const StringRef &TuneCPU,
-                           const StringRef &FS, const TargetMachine &TM)
-    : MegaCoreGenSubtargetInfo(TM.getTargetTriple(), CPU, TuneCPU, FS) {
+MegaCoreSubtarget::MegaCoreSubtarget(const Triple &TT, const std::string &CPU,
+                           const std::string &FS, const TargetMachine &TM)
+    : MegaCoreGenSubtargetInfo(TT, CPU, /*TuneCPU=*/CPU, FS), TLInfo(TM, *this) {
   MEGACORE_DUMP_CYAN
 }

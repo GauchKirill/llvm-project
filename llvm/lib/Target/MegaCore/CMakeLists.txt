@@ -17,6 +17,7 @@ add_llvm_target(MegaCoreCodeGen
   MegaCoreSubtarget.cpp
   MegaCoreAsmPrinter.cpp
   MegaCoreISelDagToDag.cpp
+  MegaCoreISelLowering.cpp
 
   LINK_COMPONENTS
   CodeGen
