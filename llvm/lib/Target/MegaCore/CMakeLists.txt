@@ -7,6 +7,7 @@ tablegen(LLVM MegaCoreGenInstrInfo.inc -gen-instr-info)
 tablegen(LLVM MegaCoreGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM MegaCoreGenMCPseudoLowering.inc -gen-pseudo-lowering)
 tablegen(LLVM MegaCoreGenDAGISel.inc -gen-dag-isel)
+tablegen(LLVM MegaCoreGenCallingConv.inc -gen-callingconv)
 
 add_public_tablegen_target(MegaCoreCommonTableGen)
 
