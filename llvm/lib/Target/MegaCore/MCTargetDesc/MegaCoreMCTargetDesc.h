@@ -1,6 +1,7 @@
 #ifndef LLVM_LIB_TARGET_MEGACORE_MCTARGETDESC_MEGACOREMCTARGETDESC_H
 #define LLVM_LIB_TARGET_MEGACORE_MCTARGETDESC_MEGACOREMCTARGETDESC_H
 
+#include <memory>
 namespace llvm {
 class MCCodeEmitter;
 class MCContext;
@@ -16,6 +17,8 @@ MCCodeEmitter *createMegaCoreMCCodeEmitter(const MCInstrInfo &MCII, MCContext &C
 MCAsmBackend *createMegaCoreAsmBackend(const Target &T, const MCSubtargetInfo &STI,
                                         const MCRegisterInfo &MRI,
                                         const MCTargetOptions &Options);
+std::unique_ptr<MCObjectTargetWriter> createMegaCoreELFObjectWriter(bool Is64Bit,
+                                                               uint8_t OSABI);
 } // namespace llvm
 
 // Defines symbolic names for MegaCore registers.  This defines a mapping from

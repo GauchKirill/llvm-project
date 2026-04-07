@@ -4,6 +4,7 @@ add_llvm_component_library(LLVMMegaCoreDesc
   MegaCoreInstPrinter.cpp
   MegaCoreMCCodeEmitter.cpp
   MegaCoreAsmBackend.cpp
+  MegaCoreELFObjectWriter.cpp
   
   LINK_COMPONENTS
   MC
