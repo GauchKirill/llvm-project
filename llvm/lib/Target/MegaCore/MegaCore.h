@@ -5,13 +5,13 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Target/TargetMachine.h"
 
-#define MEGACORE_DUMP(Color)                                                   \
+/*#define MEGACORE_DUMP(Color)                                                   \
   {                                                                            \
     llvm::errs().changeColor(Color)                                            \
         << __func__ << "\n\t\t" << __FILE__ << ":" << __LINE__ << "\n";        \
     llvm::errs().changeColor(llvm::raw_ostream::WHITE);                        \
-  }
-// #define MEGACORE_DUMP(Color) {}
+  }*/
+#define MEGACORE_DUMP(Color) {}
 
 #define MEGACORE_DUMP_RED MEGACORE_DUMP(llvm::raw_ostream::RED)
 #define MEGACORE_DUMP_GREEN MEGACORE_DUMP(llvm::raw_ostream::GREEN)
