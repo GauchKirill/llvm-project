@@ -9,6 +9,7 @@ tablegen(LLVM MegaCoreGenMCPseudoLowering.inc -gen-pseudo-lowering)
 tablegen(LLVM MegaCoreGenDAGISel.inc -gen-dag-isel)
 tablegen(LLVM MegaCoreGenCallingConv.inc -gen-callingconv)
 tablegen(LLVM MegaCoreGenAsmWriter.inc -gen-asm-writer)
+tablegen(LLVM MegaCoreGenMCCodeEmitter.inc -gen-emitter)
 
 add_public_tablegen_target(MegaCoreCommonTableGen)
 
