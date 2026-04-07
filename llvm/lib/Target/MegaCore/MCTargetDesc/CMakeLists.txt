@@ -3,6 +3,7 @@ add_llvm_component_library(LLVMMegaCoreDesc
   MegaCoreMCAsmInfo.cpp
   MegaCoreInstPrinter.cpp
   MegaCoreMCCodeEmitter.cpp
+  MegaCoreAsmBackend.cpp
   
   LINK_COMPONENTS
   MC

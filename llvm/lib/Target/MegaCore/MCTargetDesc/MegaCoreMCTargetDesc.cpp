@@ -78,4 +78,6 @@ extern "C" LLVM_EXTERNAL_VISIBILITY void LLVMInitializeMegaCoreTargetMC() {
   TargetRegistry::RegisterMCInstPrinter(TheMegaCoreTarget, createMegaCoreMCInstPrinter);
   // Register the MC Code Emitter.
   TargetRegistry::RegisterMCCodeEmitter(TheMegaCoreTarget, createMegaCoreMCCodeEmitter);
+  // Register the asm backend.
+  TargetRegistry::RegisterMCAsmBackend(TheMegaCoreTarget, createMegaCoreAsmBackend);
 }
