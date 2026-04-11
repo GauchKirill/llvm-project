@@ -1,4 +1,5 @@
-BUILTIN(simPutPixel, "vUiUiUi", "nc")
-BUILTIN(simFlush,    "v",       "nc")
+BUILTIN(simInit, "v", "nc")
+BUILTIN(sim,     "iPiPiPiPiPiPii", "nc")  // i32 (sim(...))
+BUILTIN(simExit, "v", "nc")
 
 #undef BUILTIN

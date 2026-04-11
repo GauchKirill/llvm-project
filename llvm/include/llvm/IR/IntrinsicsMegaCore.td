@@ -1,11 +1,11 @@
-//===----------------------------------------------------------------------===//
-// MegaCore Intrinsics
-//===----------------------------------------------------------------------===//
-
 let TargetPrefix = "megacore" in {
-    def int_megacore_putpixel : ClangBuiltin<"simPutPixel">,
-        Intrinsic<[], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], 
+    def int_megacore_sim_init : ClangBuiltin<"simInit">,
+        Intrinsic<[], [], [IntrNoMem, IntrHasSideEffects]>;
+    def int_megacore_sim : ClangBuiltin<"sim">,
+        Intrinsic<[llvm_i32_ty], 
+                  [llvm_ptr_ty, llvm_ptr_ty, llvm_ptr_ty, 
+                   llvm_ptr_ty, llvm_ptr_ty, llvm_ptr_ty, llvm_i32_ty], 
                   [IntrNoMem, IntrHasSideEffects]>;
-    def int_megacore_flush : ClangBuiltin<"simFlush">,
+    def int_megacore_sim_exit : ClangBuiltin<"simExit">,
         Intrinsic<[], [], [IntrNoMem, IntrHasSideEffects]>;
 }

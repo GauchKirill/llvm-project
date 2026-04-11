@@ -54,11 +54,16 @@ def MOVLI : MegaCoreInst<0xAA, (outs GPR:$r1), (ins simm16:$r3_imm),
                     "MOVli $r1 $r3_imm",
                     [(set GPR:$r1, simm16:$r3_imm)]>;
 
-// flush
+// simInit
 let r1 = 0, r2 = 0, r3_imm = 0 in
-def FLUSH : MegaCoreInst<0xFF, (outs), (ins), "FLUSH", [(int_megacore_flush)]>;
+def SIMINIT : MegaCoreInst<0xFC, (outs), (ins), "SIMINIT", [(int_megacore_sim_init)]>;
 
-// putpixel
-def PUTPIXEL : MegaCoreInst<0xEE, (outs), (ins GPR:$r1, GPR:$r2, GPR:$r3_imm),
-                            "PUTPIXEL $r1 $r2 $r3_imm", 
-                            [(int_megacore_putpixel GPR:$r1, GPR:$r2, GPR:$r3_imm)]>;
+// simExit
+let r1 = 0, r2 = 0, r3_imm = 0 in
+def SIMEXIT : MegaCoreInst<0xFD, (outs), (ins), "SIMEXIT", [(int_megacore_sim_exit)]>;
+
+// sim - принимает 7 аргументов: 6 указателей (в регистрах r1..r6) и количество (r7)
+// Предполагается, что в ISA MegaCore есть достаточно регистров.
+def SIM : MegaCoreInst<0xFE, (outs), (ins GPR:$r1, GPR:$r2, GPR:$r3, GPR:$r4, GPR:$r5, GPR:$r6, GPR:$r7),
+                       "SIM $r1 $r2 $r3 $r4 $r5 $r6 $r7",
+                       [(set GPR:$dst, (int_megacore_sim GPR:$r1, GPR:$r2, GPR:$r3, GPR:$r4, GPR:$r5, GPR:$r6, GPR:$r7))]>;
