@@ -29,6 +29,7 @@
 #include "llvm/IR/Operator.h"
 #include "llvm/IR/PatternMatch.h"
 #include "llvm/IR/Statepoint.h"
+#include "llvm/IR/IntrinsicsMegaCore.h"
 #include <optional>
 
 using namespace llvm;

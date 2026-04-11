@@ -2,13 +2,10 @@
 // MegaCore Intrinsics
 //===----------------------------------------------------------------------===//
 
-let TargetPrefix = "megacore" in {  // Все интринсики начинаются с "llvm.megacore."
-
-    def int_megacore_putpixel : 
+let TargetPrefix = "megacore" in {
+    def int_megacore_putpixel : ClangBuiltin<"simPutPixel">,
         Intrinsic<[], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], 
                   [IntrNoMem, IntrHasSideEffects]>;
-
-    def int_megacore_flush : 
+    def int_megacore_flush : ClangBuiltin<"simFlush">,
         Intrinsic<[], [], [IntrNoMem, IntrHasSideEffects]>;
-
-} // TargetPrefix = "megacore"
+}
