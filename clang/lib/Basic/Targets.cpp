@@ -27,6 +27,7 @@
 #include "Targets/M68k.h"
 #include "Targets/MSP430.h"
 #include "Targets/Mips.h"
+#include "Targets/MegaCore.h"
 #include "Targets/NVPTX.h"
 #include "Targets/OSTargets.h"
 #include "Targets/PNaCl.h"
@@ -469,6 +470,9 @@ std::unique_ptr<TargetInfo> AllocateTarget(const llvm::Triple &Triple,
     default:
       return std::make_unique<RISCV64TargetInfo>(Triple, Opts);
     }
+
+  case llvm::Triple::megacore:
+    return std::make_unique<MegaCoreTargetInfo>(Triple, Opts);
 
   case llvm::Triple::sparc:
     switch (os) {
