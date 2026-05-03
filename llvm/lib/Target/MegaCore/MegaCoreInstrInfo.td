@@ -67,3 +67,52 @@ def SIMEXIT : MegaCoreInst<0xFD, (outs), (ins), "SIMEXIT", [(int_megacore_sim_ex
 def SIM : MegaCoreInst<0xFE, (outs), (ins GPR:$r1, GPR:$r2, GPR:$r3, GPR:$r4, GPR:$r5, GPR:$r6, GPR:$r7),
                        "SIM $r1 $r2 $r3 $r4 $r5 $r6 $r7",
                        [(set GPR:$dst, (int_megacore_sim GPR:$r1, GPR:$r2, GPR:$r3, GPR:$r4, GPR:$r5, GPR:$r6, GPR:$r7))]>;
+
+
+//===----------------------------------------------------------------------===//
+// Арифметические инструкции
+//===----------------------------------------------------------------------===//
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in {
+  // RR-форма
+  multiclass ArithRR<bits<8> op, string OpcStr, SDNode OpNode> {
+    def _RR : MegaCoreInst<op, (outs GPR:$rd), (ins GPR:$rs1, GPR:$rs2),
+                           !strconcat(OpcStr, " $rd, $rs1, $rs2"),
+                           [(set GPR:$rd, (OpNode GPR:$rs1, GPR:$rs2))]>;
+  }
+  // RI-форма (с 16-битным непосредственным значением)
+  multiclass ArithRI<bits<8> op, string OpcStr, SDNode OpNode> {
+    def _RI : MegaCoreInst<op, (outs GPR:$rd), (ins GPR:$rs1, simm16:$imm),
+                           !strconcat(OpcStr, "i $rd, $rs1, $imm"),
+                           [(set GPR:$rd, (OpNode GPR:$rs1, simm16:$imm))]>;
+  }
+}
+
+// Коды операций (выберите свободные, например 0x30-0x3F)
+defm ADD : ArithRR<0x30, "add", add>;
+defm ADD : ArithRI<0x31, "add", add>;
+defm SUB : ArithRR<0x32, "sub", sub>;
+defm SUB : ArithRI<0x33, "sub", sub>;
+defm MUL : ArithRR<0x34, "mul", mul>;
+defm MUL : ArithRI<0x35, "mul", mul>;
+defm DIV : ArithRR<0x36, "div", sdiv>;          // для srem
+defm AND : ArithRR<0x37, "and", and>;
+defm AND : ArithRI<0x38, "and", and>;
+defm OR  : ArithRR<0x39, "or",  or>;
+defm OR  : ArithRI<0x3A, "or",  or>;
+defm XOR : ArithRR<0x3B, "xor", xor>;
+defm XOR : ArithRI<0x3C, "xor", xor>;
+
+//===----------------------------------------------------------------------===//
+// Инструкции загрузки и сохранения
+//===----------------------------------------------------------------------===//
+
+let hasSideEffects = 0, mayLoad = 1, mayStore = 0 in
+def LDW : MegaCoreInst<0xE0, (outs GPR:$rd), (ins GPR:$addr),
+                       "ldw $rd, ($addr)",
+                       [(set GPR:$rd, (load GPR:$addr))]>;
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 1 in
+def STW : MegaCoreInst<0xE1, (outs), (ins GPR:$addr, GPR:$rs),
+                       "stw $addr, $rs",
+                       [(store GPR:$rs, GPR:$addr)]>;
