@@ -117,3 +117,16 @@ MCCodeEmitter *llvm::createMegaCoreMCCodeEmitter(const MCInstrInfo &MCII,
                                             MCContext &Ctx) {
   return new MegaCoreMCCodeEmitter(MCII, Ctx);
 }
+
+unsigned MegaCoreMCCodeEmitter::getBranchTarget16OpValue(const MCInst &MI, unsigned OpNo,
+                                                         SmallVectorImpl<MCFixup> &Fixups,
+                                                         const MCSubtargetInfo &STI) const {
+  const MCOperand &MO = MI.getOperand(OpNo);
+  if (MO.isImm())
+    return MO.getImm() / 4; // инструкции выровнены по 4 байта
+
+  assert(MO.isExpr() && "Expected expression for branch target");
+  // TODO: создать fixup fixup_MegaCore_PC16
+  Fixups.push_back(MCFixup::create(0, MO.getExpr(), MCFixupKind(FirstTargetFixupKind)));
+  return 0;
+}

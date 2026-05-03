@@ -19,6 +19,8 @@ public:
   // Print the given operand.
   static void printOperand(const MCOperand &MO, raw_ostream &O);
 
+  void printBranchOperand(const MCInst *MI, uint64_t Address, unsigned OpNo, raw_ostream &O);
+
   // Override MCInstPrinter.
   void printRegName(raw_ostream &O, MCRegister Reg) override;
   void printInst(const MCInst *MI, uint64_t Address, StringRef Annot,

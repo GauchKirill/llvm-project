@@ -57,6 +57,8 @@ MegaCoreTargetLowering::MegaCoreTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::XOR, MVT::i32, Legal);
 
   setOperationAction(ISD::SREM, MVT::i32, Expand);
+
+  setOperationAction(ISD::BR, MVT::Other, Legal);
   // ...
   setOperationAction(ISD::LOAD, MVT::i32, Legal);
   setOperationAction(ISD::STORE, MVT::i32, Legal);

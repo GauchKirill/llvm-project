@@ -121,3 +121,36 @@ def STW : MegaCoreInst<0xE1, (outs), (ins GPR:$addr, GPR:$rs),
 let isAsCheapAsAMove = 1, isCodeGenOnly = 1, isReMaterializable = 1, r2 = 0 in
 def MOVHI : MegaCoreInst<0xAB, (outs GPR:$r1), (ins simm16:$r3_imm),
                          "MOVhi $r1 $r3_imm", []>;
+
+//===----------------------------------------------------------------------===//
+// Операнд для PC-относительных переходов
+//===----------------------------------------------------------------------===//
+
+def btarget16 : Operand<OtherVT> {
+  let ParserMatchClass = SImmAsmOperand<16>;
+  let PrintMethod = "printBranchOperand";
+  let EncoderMethod = "getBranchTarget16OpValue";
+  let DecoderMethod = "decodeSImmOperand<16>";
+  let MCOperandPredicate = [{
+    int64_t Imm;
+    if (MCOp.evaluateAsConstantImm(Imm))
+      return isInt<16>(Imm);
+    return MCOp.isBareSymbolRef();
+  }];
+  let OperandType = "OPERAND_PCREL";
+}
+
+//===----------------------------------------------------------------------===//
+// Инструкции ветвления
+//===----------------------------------------------------------------------===//
+
+let isBranch = 1, isTerminator = 1, hasSideEffects = 0, r1 = 0, r2 = 0 in
+def B : MegaCoreInst<0xB0, (outs), (ins btarget16:$target),
+                     "b $target", [(br bb:$target)]>;
+
+let isBranch = 1, isTerminator = 1, hasSideEffects = 0, r2 = 0 in
+def BCOND : MegaCoreInst<0xBC, (outs), (ins GPR:$cond, btarget16:$target),
+                         "b$cond $target", []>;
+
+// Паттерн для brcond
+def : Pat<(brcond (i32 GPR:$cond), bb:$target), (BCOND GPR:$cond, btarget16:$target)>;
