@@ -173,3 +173,15 @@ let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
 def VADD : MegaCoreInst<0xF2, (outs VecReg:$rd), (ins VecReg:$rs1, VecReg:$rs2),
                         "vadd $rd, $rs1, $rs2",
                         [(set VecReg:$rd, (add VecReg:$rs1, VecReg:$rs2))]>;
+
+//===----------------------------------------------------------------------===//
+// Инструкции сложения с сравнением (для оптимизации циклов)
+//===----------------------------------------------------------------------===//
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
+def INC_EQi : MegaCoreInst<0x90, (outs GPR:$rd, GPR:$flag), (ins GPR:$rs, simm16:$limit),
+                           "inc_eq $rd, $rs, $limit", []>;
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
+def INC_NEi : MegaCoreInst<0x91, (outs GPR:$rd, GPR:$flag), (ins GPR:$rs, simm16:$limit),
+                           "inc_ne $rd, $rs, $limit", []>;

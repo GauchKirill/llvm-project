@@ -18,6 +18,8 @@ enum NodeType : unsigned {
   RET,
   CALL,
   BR_CC,
+  INC_AND_CMP_EQ,
+  INC_AND_CMP_NE,
 };
 
 } // namespace MegaCoreISD

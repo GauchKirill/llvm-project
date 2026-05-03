@@ -29,6 +29,14 @@ using namespace llvm;
 static const MCPhysReg ArgGPRs[] = {MegaCore::R2, MegaCore::R3, MegaCore::R4,
                                     MegaCore::R5, MegaCore::R6, MegaCore::R7};
 
+static unsigned getIncCmpOpcode(ISD::CondCode CC) {
+  switch (CC) {
+  case ISD::SETEQ: return MegaCore::INC_EQi;
+  case ISD::SETNE: return MegaCore::INC_NEi;
+  default: llvm_unreachable("Unhandled condition for inc_cmp");
+  }
+}
+
 void MegaCoreTargetLowering::ReplaceNodeResults(SDNode *N,
                                            SmallVectorImpl<SDValue> &Results,
                                            SelectionDAG &DAG) const {
@@ -94,6 +102,8 @@ SDValue MegaCoreTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) co
   switch (Op->getOpcode()) {
   case ISD::Constant:
     return lowerConstant(Op, DAG);
+  case ISD::BR_CC:
+  return lowerBR_CC(Op, DAG);
   default:
     llvm_unreachable("Unhandled operation in LowerOperation");
   }
@@ -113,6 +123,39 @@ SDValue MegaCoreTargetLowering::lowerConstant(SDValue Op, SelectionDAG &DAG) con
 
   // Объединяем через OR_RR
   return SDValue(DAG.getMachineNode(MegaCore::OR_RR, DL, MVT::i32, HiReg, LoReg), 0);
+}
+
+SDValue MegaCoreTargetLowering::lowerBR_CC(SDValue Op, SelectionDAG &DAG) const {
+  SDNode *BR_CC = Op.getNode();
+  SDValue Chain = BR_CC->getOperand(0);
+  ISD::CondCode CC = cast<CondCodeSDNode>(BR_CC->getOperand(1))->get();
+  SDValue LHS = BR_CC->getOperand(2);
+  SDValue RHS = BR_CC->getOperand(3);
+  SDValue Dest = BR_CC->getOperand(4);
+
+  // Ищем паттерн: (x + 1) сравнение с константой
+  if (LHS.getOpcode() == ISD::ADD) {
+    SDValue AddOp = LHS;
+    if (auto *C = dyn_cast<ConstantSDNode>(AddOp.getOperand(1))) {
+      if (C->getSExtValue() == 1 && isa<ConstantSDNode>(RHS)) {
+        SDValue Val = AddOp.getOperand(0);
+        SDValue Limit = DAG.getTargetConstant(cast<ConstantSDNode>(RHS)->getZExtValue(),
+                                              SDLoc(Op), MVT::i32);
+        SDVTList VTs = DAG.getVTList(MVT::i32, MVT::i32);
+        unsigned Opc = getIncCmpOpcode(CC);
+        SDValue IncCmp = DAG.getNode(Opc, SDLoc(Op), VTs, {Val, Limit});
+        // Заменяем использование LHS на IncCmp.getValue(1)
+        DAG.ReplaceAllUsesWith(LHS.getNode(), IncCmp.getValue(1).getNode());
+        DAG.RemoveDeadNode(LHS.getNode());
+        // Создаём условный переход по флагу
+        return DAG.getNode(MegaCoreISD::BR_CC, SDLoc(Op), MVT::Other,
+                           Chain, IncCmp.getValue(0), Dest);
+      }
+    }
+  }
+
+  // Если паттерн не найден, возвращаем как есть
+  return Op;
 }
 
 
