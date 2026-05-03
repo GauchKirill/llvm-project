@@ -116,3 +116,8 @@ let hasSideEffects = 0, mayLoad = 0, mayStore = 1 in
 def STW : MegaCoreInst<0xE1, (outs), (ins GPR:$addr, GPR:$rs),
                        "stw $addr, $rs",
                        [(store GPR:$rs, GPR:$addr)]>;
+
+// movhi - загрузка старших 16 бит (будет сдвинута влево на 16 при использовании с OR)
+let isAsCheapAsAMove = 1, isCodeGenOnly = 1, isReMaterializable = 1, r2 = 0 in
+def MOVHI : MegaCoreInst<0xAB, (outs GPR:$r1), (ins simm16:$r3_imm),
+                         "MOVhi $r1 $r3_imm", []>;

@@ -80,6 +80,31 @@ const char *MegaCoreTargetLowering::getTargetNodeName(unsigned Opcode) const {
   return nullptr;
 }
 
+SDValue MegaCoreTargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
+  switch (Op->getOpcode()) {
+  case ISD::Constant:
+    return lowerConstant(Op, DAG);
+  default:
+    llvm_unreachable("Unhandled operation in LowerOperation");
+  }
+}
+
+SDValue MegaCoreTargetLowering::lowerConstant(SDValue Op, SelectionDAG &DAG) const {
+  SDLoc DL(Op);
+  uint64_t Imm = cast<ConstantSDNode>(Op)->getZExtValue();
+  uint16_t Hi = (Imm >> 16) & 0xFFFF;
+  uint16_t Lo = Imm & 0xFFFF;
+
+  SDValue HiVal = DAG.getTargetConstant(Hi, DL, MVT::i32);
+  SDValue LoVal = DAG.getTargetConstant(Lo, DL, MVT::i32);
+
+  SDValue HiReg = SDValue(DAG.getMachineNode(MegaCore::MOVHI, DL, MVT::i32, HiVal), 0);
+  SDValue LoReg = SDValue(DAG.getMachineNode(MegaCore::MOVLI, DL, MVT::i32, LoVal), 0);
+
+  // Объединяем через OR_RR
+  return SDValue(DAG.getMachineNode(MegaCore::OR_RR, DL, MVT::i32, HiReg, LoReg), 0);
+}
+
 
 //===----------------------------------------------------------------------===//
 //  Misc Lower Operation implementation

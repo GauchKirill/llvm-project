@@ -37,6 +37,8 @@ public:
 
   MegaCoreSubtarget const &getSubtarget() const { return STI; }
 
+  SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
+
 private:
   const MegaCoreSubtarget &STI;
 
@@ -63,6 +65,9 @@ private:
                       bool IsVarArg,
                       const SmallVectorImpl<ISD::OutputArg> &ArgsFlags,
                       LLVMContext &Context, const Type *RetTy) const override;
+
+  SDValue lowerConstant(SDValue Op, SelectionDAG &DAG) const;
+
 };
 
 } // end namespace llvm
