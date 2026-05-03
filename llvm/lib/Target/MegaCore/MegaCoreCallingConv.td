@@ -1,34 +1,26 @@
 //===----------------------------------------------------------------------===//
- // This describes the calling conventions for MegaCore architecture.
- //===----------------------------------------------------------------------===//
- 
- //===----------------------------------------------------------------------===//
- // MegaCore Return Value Calling Convention
- //===----------------------------------------------------------------------===//
- def RetCC_MegaCore : CallingConv<[
-   // i32 return values
-   CCIfType<[i32, i64], CCAssignToReg<[R9, R10, R11, R12]>>,
- 
-   // Integer values get stored in stack slots that are 4 bytes in
-   // size and 4-byte aligned.
-   CCIfType<[i64], CCAssignToStack<8, 4>>,
-   CCIfType<[i32], CCAssignToStack<4, 4>>
- ]>;
- 
- //===----------------------------------------------------------------------===//
- // MegaCore Argument Calling Conventions
- //===----------------------------------------------------------------------===//
- def CC_MegaCore : CallingConv<[
-   // Promote i8/i16 arguments to i32.
-   CCIfType<[i8, i16], CCPromoteToType<i32>>,
- 
-   // The first 4 integer arguments are passed in integer registers.
-   CCIfType<[i32, i64], CCAssignToReg<[R9, R10, R11, R12]>>,
- 
-   // Integer values get stored in stack slots that are 4 bytes in
-   // size and 4-byte aligned.
-   CCIfType<[i64], CCAssignToStack<8, 4>>,
-   CCIfType<[i32], CCAssignToStack<4, 4>>
- ]>;
- 
- def CSR_MegaCore : CalleeSavedRegs<(add R0, R1, R3, R5, R6, R7, R8)>;
+// MegaCore Return Value Calling Convention
+//===----------------------------------------------------------------------===//
+
+def RetCC_MegaCore : CallingConv<[
+  // Возвращаемое значение в R0
+  CCIfType<[i32], CCAssignToReg<[R0]>>
+]>;
+
+//===----------------------------------------------------------------------===//
+// MegaCore Argument Calling Conventions
+//===----------------------------------------------------------------------===//
+
+def CC_MegaCore : CallingConv<[
+  // Продвинуть i8/i16 до i32
+  CCIfType<[i8, i16], CCPromoteToType<i32>>,
+
+  // Первые 6 аргументов передаются в регистрах R2-R7
+  CCIfType<[i32], CCAssignToReg<[R2, R3, R4, R5, R6, R7]>>,
+
+  // Остальные аргументы передаются на стеке
+  CCIfType<[i32], CCAssignToStack<4, 4>>
+]>;
+
+// Callee-saved registers
+def CSR_MegaCore : CalleeSavedRegs<(add R8, R9, R10, R11, R12, R13, R14, R15)>;

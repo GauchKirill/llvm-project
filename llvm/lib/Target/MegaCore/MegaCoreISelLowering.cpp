@@ -26,7 +26,8 @@
 
 using namespace llvm;
 
-static const MCPhysReg ArgGPRs[] = {MegaCore::R9, MegaCore::R10, MegaCore::R11, MegaCore::R12};
+static const MCPhysReg ArgGPRs[] = {MegaCore::R2, MegaCore::R3, MegaCore::R4,
+                                    MegaCore::R5, MegaCore::R6, MegaCore::R7};
 
 void MegaCoreTargetLowering::ReplaceNodeResults(SDNode *N,
                                            SmallVectorImpl<SDValue> &Results,
