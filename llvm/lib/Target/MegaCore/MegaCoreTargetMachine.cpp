@@ -4,6 +4,7 @@
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/MC/TargetRegistry.h"
+#include "llvm/IR/IntrinsicsMegaCore.h"
 
 using namespace llvm;
 

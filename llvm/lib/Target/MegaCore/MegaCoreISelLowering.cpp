@@ -1,7 +1,7 @@
 #include "MegaCoreISelLowering.h"
 #include "MCTargetDesc/MegaCoreInfo.h"
 #include "MegaCore.h"
-#include "MegaCoreMachineFunctionInfo.h"
+#include "MegaCoreFunctionInfo.h"
 #include "MegaCoreRegisterInfo.h"
 #include "MegaCoreSubtarget.h"
 #include "MegaCoreTargetMachine.h"
@@ -85,12 +85,12 @@ MegaCoreTargetLowering::MegaCoreTargetLowering(const TargetMachine &TM,
 
   setOperationAction(ISD::FRAMEADDR, MVT::i32, Legal);
 
-  // Векторные типы
-  MVT::SimpleValueType VecVT = MVT::v4i32;
-  addRegisterClass(VecVT, &MegaCore::VecRegRegClass);
-  setOperationAction(ISD::LOAD,  VecVT, Legal);
-  setOperationAction(ISD::STORE, VecVT, Legal);
-  setOperationAction(ISD::ADD,   VecVT, Legal);
+  // // Векторные типы
+  // MVT::SimpleValueType VecVT = MVT::v4i32;
+  // addRegisterClass(VecVT, &MegaCore::VecRegRegClass);
+  // setOperationAction(ISD::LOAD,  VecVT, Legal);
+  // setOperationAction(ISD::STORE, VecVT, Legal);
+  // setOperationAction(ISD::ADD,   VecVT, Legal);
 }
 
 const char *MegaCoreTargetLowering::getTargetNodeName(unsigned Opcode) const {
@@ -439,7 +439,7 @@ static SDValue unpackFromRegLoc(SelectionDAG &DAG, SDValue Chain,
   MachineRegisterInfo &RegInfo = MF.getRegInfo();
   EVT LocVT = VA.getLocVT();
   SDValue Val;
-  const TargetRegisterClass *RC = TLI.getRegClassFor(LocVT.getMegaCorepleVT());
+  const TargetRegisterClass *RC = TLI.getRegClassFor(LocVT.getSimpleVT());
   Register VReg = RegInfo.createVirtualRegister(RC);
   RegInfo.addLiveIn(VA.getLocReg(), VReg);
   Val = DAG.getCopyFromReg(Chain, DL, VReg, LocVT);

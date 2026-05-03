@@ -69,6 +69,7 @@ private:
                       LLVMContext &Context, const Type *RetTy) const override;
 
   SDValue lowerConstant(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
 
 };
 
