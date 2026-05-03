@@ -102,6 +102,9 @@ defm OR  : ArithRR<0x39, "or",  or>;
 defm OR  : ArithRI<0x3A, "or",  or>;
 defm XOR : ArithRR<0x3B, "xor", xor>;
 defm XOR : ArithRI<0x3C, "xor", xor>;
+defm SRA : ArithRR<0x3D, "sra", sra>;
+defm SRL : ArithRR<0x3E, "srl", srl>;
+defm SHL : ArithRR<0x3F, "shl", shl>;
 
 //===----------------------------------------------------------------------===//
 // Инструкции загрузки и сохранения

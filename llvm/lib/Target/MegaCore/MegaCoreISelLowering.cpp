@@ -65,7 +65,13 @@ MegaCoreTargetLowering::MegaCoreTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::OR,  MVT::i32, Legal);
   setOperationAction(ISD::XOR, MVT::i32, Legal);
 
+  // SREM раскладывается в sdiv, mul, sub
   setOperationAction(ISD::SREM, MVT::i32, Expand);
+
+  // Сдвиги
+  setOperationAction(ISD::SRA, MVT::i32, Legal);
+  setOperationAction(ISD::SRL, MVT::i32, Legal);
+  setOperationAction(ISD::SHL, MVT::i32, Legal);
 
   setOperationAction(ISD::BR, MVT::Other, Legal);
   // ...
