@@ -154,3 +154,22 @@ def BCOND : MegaCoreInst<0xBC, (outs), (ins GPR:$cond, btarget16:$target),
 
 // Паттерн для brcond
 def : Pat<(brcond (i32 GPR:$cond), bb:$target), (BCOND GPR:$cond, btarget16:$target)>;
+
+//===----------------------------------------------------------------------===//
+// Векторные инструкции
+//===----------------------------------------------------------------------===//
+
+let hasSideEffects = 0, mayLoad = 1, mayStore = 0 in
+def VLD : MegaCoreInst<0xF0, (outs VecReg:$rd), (ins GPR:$addr),
+                       "vld $rd, ($addr)",
+                       [(set VecReg:$rd, (load (v4i32 GPR:$addr)))]>;
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 1 in
+def VST : MegaCoreInst<0xF1, (outs), (ins GPR:$addr, VecReg:$rs),
+                       "vst $addr, $rs",
+                       [(store VecReg:$rs, GPR:$addr)]>;
+
+let hasSideEffects = 0, mayLoad = 0, mayStore = 0 in
+def VADD : MegaCoreInst<0xF2, (outs VecReg:$rd), (ins VecReg:$rs1, VecReg:$rs2),
+                        "vadd $rd, $rs1, $rs2",
+                        [(set VecReg:$rd, (add VecReg:$rs1, VecReg:$rs2))]>;

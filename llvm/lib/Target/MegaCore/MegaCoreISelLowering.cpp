@@ -70,6 +70,13 @@ MegaCoreTargetLowering::MegaCoreTargetLowering(const TargetMachine &TM,
   setOperationAction(ISD::BR_CC, MVT::i32, Custom);
 
   setOperationAction(ISD::FRAMEADDR, MVT::i32, Legal);
+
+  // Векторные типы
+  MVT::SimpleValueType VecVT = MVT::v4i32;
+  addRegisterClass(VecVT, &MegaCore::VecRegRegClass);
+  setOperationAction(ISD::LOAD,  VecVT, Legal);
+  setOperationAction(ISD::STORE, VecVT, Legal);
+  setOperationAction(ISD::ADD,   VecVT, Legal);
 }
 
 const char *MegaCoreTargetLowering::getTargetNodeName(unsigned Opcode) const {
